@@ -18,7 +18,7 @@ func iserr(err error) bool {
 }
 
 func wait() {
-  fmt.Println("   Enter to quit")
+  fmt.Println("\n   Enter to quit")
   var q string
   fmt.Scanf("%s", &q)
 }
@@ -43,12 +43,28 @@ func main() {
     wait()
   } else {
     if args[1] == "text" {
-      go client.AsClient("text")
+      go func() {
+        err := client.AsClient("text")
+        if err != nil {
+          fmt.Println(err)
+        }
+      }()
       wait()
     }
     if args[1] == "files" {
-      go client.AsClient("files")
+      go func() {
+        err := client.AsClient("files")
+        if err != nil {
+          fmt.Println(err)
+        }
+      }()
       wait()
+    }
+    if args[1] == "config" {
+      err := config.TerminalConfig()
+      if err != nil {
+        fmt.Println(err)
+      }
     }
     if args[1] == "migrate" {
       err := database.MigratePgToSqlt()

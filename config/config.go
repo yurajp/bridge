@@ -7,19 +7,20 @@ import (
 )
 
 type Config struct {
-  Server Srv
-  Client Clt
-  Db Dbs
+  Appdir string `json:"appdir"`
+  Server Srv `json:"server"`
+  Client Clt `json:"client"`
+  Db Dbs `json:"db"`
 }
 
 type  Srv struct {
-    Port string
+    Port string `json:"port"`
     TxtDir string `json:"txtdir"`
     FileDir string `json:"filedir"`
 }
   
 type  Clt struct {
-    Addr string
+    Addr string `json:"addr"`
     TxtFile string `json:"txtfile"`
     FileDir string `json:"filedir"`
 }
@@ -35,19 +36,23 @@ type Dbs struct {
     PgTable string `json:"pgtable"`
 }
 
-var STORAGE = "/storage/emulated/0/"
+var (
+  STORAGE = "/storage/emulated/0/"
+  TERMUXDIR = "/data/data/com.termux/files/home/"
+)
 
-var DefaultConf = Config{Server: Srv{Port: ":4646",
+var DefaultConf = Config{Appdir: TERMUXDIR + "golangs/bridge/mobile",
+  Server: Srv{Port: ":4646",
     TxtDir: STORAGE + "BridgeTexts",
     FileDir: STORAGE + "BridgeFiles"},
   Client: Clt{Addr: "http://192.168.1.38:4545",
     TxtFile: STORAGE + "pc.txt",
     FileDir: STORAGE + "Uploads"},
-  Db: Dbs{SqltPath: "bridge.db",
+  Db: Dbs{SqltPath: TERMUXDIR + "golangs/bridge-mobile/database/bridge.db",
     SqltTable: "links",
     PgHost: "localhost",
     PgPort: "5432",
-    PgUser: "yurs",
+    PgUser: "yura",
     PgPswd: "26335",
     PgName: "notedb",
     PgTable: "messer"}}
@@ -55,7 +60,16 @@ var DefaultConf = Config{Server: Srv{Port: ":4646",
 var Conf Config
 
 func LoadConf() error {
-  jf, err := os.ReadFile("config.json")
+  path := TERMUXDIR + "golangs/bridge-mobile/config/config.json"
+  if _, err := os.Stat(path); err != nil {
+    if os.IsNotExist(err) {
+      er := TerminalConfig()
+      if er != nil {
+        return er
+      }
+    }
+  }
+  jf, err := os.ReadFile(path)
   if err != nil {
     return err
   }
@@ -76,7 +90,6 @@ func WriteConf(cf Config) error {
 
 func TerminalConfig() error {
   cf := Config{}
-  
   set := func(f, dft string) string {
     fmt.Printf(" - %s (empty for default)\n", f)
     var s string
@@ -87,6 +100,8 @@ func TerminalConfig() error {
     return s
   }
   
+  fmt.Println("\t APPDIR")
+  cf.Appdir = set("application directory", DefaultConf.Appdir)
   fmt.Println("\t SERVER:")
   cf.Server.Port = set("port for server", DefaultConf.Server.Port)
   cf.Server.TxtDir = set("directory for texts", DefaultConf.Server.TxtDir)
