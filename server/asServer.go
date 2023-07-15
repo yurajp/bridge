@@ -6,12 +6,14 @@ import (
 	"net"
 	"github.com/yurajp/bridge/config"
   "github.com/yurajp/bridge/ascod"
+  "github.com/yurajp/bridge/symcod"
   
 )
 
+
 type KeyResp struct {
 	Rand string
-	Pub  PubKey
+	Pub  ascod.PubKey
 }
 
 type PassMode struct {
@@ -60,7 +62,7 @@ func SecureHandle(conn net.Conn) {
 		return
 	}
 	var encPM PassMode
-	err = json.Unmarshal(passBuf[:m], &encPM)
+	err = json.Unmarshal(passMdBuf[:m], &encPM)
 	// handling the struct and getting password and mode
 	decPwd := ascod.SrvDecodeString(encPM.Password, priv)
 	mode := symcod.SymDecode(encPM.Mode, decPwd)
@@ -68,10 +70,10 @@ func SecureHandle(conn net.Conn) {
   // define further action
 	if mode == "file" {
 	  conn.Write([]byte(sOk))
-    go getFiles(conn)
+    go GetFiles(conn)
 	} else if mode == "text" {
     conn.Write([]byte(sOk))
-	  go getText(conn, decPwd)
+	  go GetText(conn, decPwd)
 	} else {
 	  conn.Write([]byte("error"))
 	  conn.Close()
@@ -81,7 +83,7 @@ func SecureHandle(conn net.Conn) {
 func AsServer() { // (stop chan struct{}) {
 	listen, err := net.Listen("tcp", port)
 	if err != nil {
-		fmt.Printf(fmt.Errorf("Failed to establish connection: %s\n", err))
+		fmt.Printf("Failed to establish connection: %s\n", err)
 	}
 	fmt.Print("\n\tSERVER started on :4545...\n ")
 	for {

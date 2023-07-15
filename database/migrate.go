@@ -1,12 +1,14 @@
-package main
+package database
 
 import (
   "database/sql"
-  "flag"
+  "os"
   "fmt"
+  "time"
+  "github.com/yurajp/bridge/config"
   
   _ "github.com/mattn/go-sqlite3"
-  "github.com/lib/pq"
+  _ "github.com/lib/pq"
 )
 
 type SqLink struct {
@@ -26,7 +28,7 @@ var (
   sqltPath = config.Conf.Db.SqltPath
   sqltTable = config.Conf.Db.SqltTable
   pgHost = config.Conf.Db.PgHost
-  pgPort = config.Conf.Db.pgPort
+  pgPort = config.Conf.Db.PgPort
   pgUser = config.Conf.Db.PgUser
   pgPswd = config.Conf.Db.PgPswd
   pgName = config.Conf.Db.PgName
@@ -36,10 +38,10 @@ var (
 
 func (pl PgLink) ToSqlite() SqLink {
   sdate := pl.Date.Format("2006-01-02")
-  return Sqlink{pl.Title, pl.Link, sdate}
+  return SqLink{pl.Title, pl.Link, sdate}
 }
 
-func PrepareSqlite(sqltPath string) error {
+func PrepareSqlt() error {
   if _, err := os.Stat(sqltPath); err == nil {
     return nil
   }
@@ -53,11 +55,12 @@ func PrepareSqlite(sqltPath string) error {
   if err != nil {
     return err
   }
+  return nil
 }
 
 func MigratePgToSqlt() error {
-  err := Prepare(sqltPath)
-  if err := nil {
+  err := PrepareSqlt()
+  if err != nil {
     return fmt.Errorf("Prepare: %w", err)
   }
   pgConn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", pgHost, pgPort, pgUser, pgPswd, pgName)
@@ -67,11 +70,11 @@ func MigratePgToSqlt() error {
 	  return fmt.Errorf("Postgres: %w", err)
 	}
 	defer pgdb.Close()
-	sqLinks := []SqlLink{}
+	sqLinks := []SqLink{}
 	query := `select * from $1`
 	rows, err := pgdb.Query(query, pgTable)
 	if err != nil {
-	  return fmt.Error("Postgres query: %w", err)
+	  return fmt.Errorf("Postgres query: %w", err)
 	}
 	defer rows.Close()
 	for rows.Next() {
@@ -84,11 +87,11 @@ func MigratePgToSqlt() error {
 	  sqLinks = append(sqLinks, sl)
 	}
 	if len(sqLinks) == 0 {
-	  return sqLinks
+	  return nil
 	}
 	sdb, err := sql.Open("sqlite3", sqltPath)
 	if err != nil {
-	  return("Open sqlite db: %w", err)
+	  return fmt.Errorf("Open sqlite db: %w", err)
 	}
 	insStat := `insert into ? values (?, ?, ?)`
 	for _, slk := range sqLinks {

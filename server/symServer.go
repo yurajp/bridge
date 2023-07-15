@@ -12,6 +12,7 @@ import (
 	"time"
 	"github.com/yurajp/bridge/config"
 	"github.com/yurajp/bridge/database"
+	"github.com/yurajp/bridge/ascod"
 	"github.com/yurajp/bridge/symcod"
 )
 
@@ -84,14 +85,15 @@ func GetText(conn net.Conn, pw string) {
 	  send(msg)
 	  return
 	}
-	text := symcod.SymDecode(lt.Text)
+	
+	text := symcod.SymDecode(lt.Text, pw)
 	if text == "" {
 	  msg = "Empty text"
 	  printer(msg, nil)
 	  send(msg)
 	  return
 	}
-	sha := HashStr(text)
+	sha := ascod.HashStr(text)
 	if sha != lt.SHA {
 	  msg = "Hashsums are not matched"
 	  printer(msg, err)
@@ -117,8 +119,6 @@ func GetText(conn net.Conn, pw string) {
 }
 
 
-
-
 func GetFiles(conn net.Conn) {
   defer conn.Close()
 	var count = 0
@@ -131,7 +131,7 @@ func GetFiles(conn net.Conn) {
 	  fmt.Printf("%s: %s\n", m, err)
 	}
 	
-	msg = ""
+	msg := ""
 	
 	for {
 		jsf := make([]byte, 1024)
@@ -148,7 +148,7 @@ func GetFiles(conn net.Conn) {
 		var u Upfile
 		err = json.Unmarshal(jsf[:n], &u)
 		if err != nil {
-			msg = "Cannot unmarshal Json")
+			msg = "Cannot unmarshal Json"
 			printer(msg, err)
 			send(msg)
 			return
@@ -169,7 +169,7 @@ func GetFiles(conn net.Conn) {
 				return
 			}
 			size += m
-			data = append(data, temp[:m]...)
+			data = append(data, tempBuf[:m]...)
 			if errors.Is(err, io.EOF) {
 				break
 			}
@@ -198,7 +198,7 @@ func GetFiles(conn net.Conn) {
 		if u.Isdir {
 			wdr, _ := os.Getwd()
 			os.Chdir(fdir)
-			ddr, _ := os.Getwd()
+		//	ddr, _ := os.Getwd()
 			unz := exec.Command("unzip", u.Fname)
 			err = unz.Run()
 			if err != nil {

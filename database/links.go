@@ -6,11 +6,9 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
-	"strconv"
 	"time"
 	"bufio"
 	"database/sql"
-	"errors"
   "github.com/yurajp/bridge/config"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/PuerkitoBio/goquery"
@@ -42,6 +40,7 @@ func PrepareDb() error {
   if err != nil {
     return err
   }
+  return nil
 }
 
 func ScrapeTitle(url string) string {
@@ -50,7 +49,7 @@ func ScrapeTitle(url string) string {
   if err != nil {
     return ""
   }
-  defer res.Body.Close()
+  defer resp.Body.Close()
   if resp.StatusCode != 200 {
     return ""
   }

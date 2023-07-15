@@ -9,7 +9,6 @@ import (
 	"math/big"
 	"strconv"
 	"strings"
-	"encoding/json"
 )
 
 type Bigint struct {

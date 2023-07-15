@@ -2,14 +2,11 @@ package client
 
 import (
    "net"
-   "crypto/rand"
-   "crypto/sha256"
-   "math/big"
    "encoding/json"
    "fmt"
-   "encoding/base64"
    "errors"
    
+   "github.com/yurajp/bridge/config"
    "github.com/yurajp/bridge/ascod"
    "github.com/yurajp/bridge/symcod"
 )
@@ -19,10 +16,13 @@ type PassMode struct {
   Mode string
 }
 
-var Mode string
+var (
+  Mode string
+  addr = config.Conf.Client.Addr
+)
 
 func AsClient(mode string) error {
-	conn, err := net.Dial("tcp", fmt.Sprintf("%s:%s", Conf.Addr, Conf.Port))
+	conn, err := net.Dial("tcp", addr)
 	if err != nil {
 		fmt.Println("\t NO CONNECTION!")
 		return err
@@ -50,13 +50,13 @@ func AsClient(mode string) error {
 	}
 	var pub ascod.PubKey
 	// decrypted number must match sended number
-	if pb, ok := ascod.GetPubAndCheck(resp, rnd); ok {
+	if pb, ok := resp.GetPubAndCheck(rnd); ok {
 	  pub = pb
 	} else {
 	  return errors.New("Invalid KeyResponse")
 	}
 	// generating and assymetric encryptyng the password for futher using in connection
-	pass := ascod.GeneratePasswrd(9)
+	pass := ascod.GeneratePassword(9)
 	encPw := ascod.ClEncodeString(pass, pub)
 	// Symmetric encoding Mode. It will be also used for password checking by server.
 	encMode:= symcod.SymEncode(Mode, pass)

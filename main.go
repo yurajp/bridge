@@ -33,7 +33,7 @@ func main() {
   if iserr(err) {
     return
   }
-  args := os.Args()
+  args := os.Args
   if len(args) > 2 {
     fmt.Println("Wrong arguments")
     return

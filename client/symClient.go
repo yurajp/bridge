@@ -3,15 +3,16 @@ package client
 import (
    "fmt"
    "os/exec"
-   "strconv"
- //  mand  "math/rand"
    "bufio"
    "net"
    "os"
    "regexp"
    "encoding/json"
    "errors"
-   "time"
+   "github.com/yurajp/bridge/config"
+   "github.com/yurajp/bridge/ascod"
+   "github.com/yurajp/bridge/symcod"
+   "github.com/yurajp/bridge/database"
 )
 
 type Letter struct {
@@ -35,7 +36,7 @@ func validText(txt string) bool {
    return re.Match([]byte(txt))
 }
 
-func sendText(conn net.Conn, pw string) error {
+func SendText(conn net.Conn, pw string) error {
   
 	file, err := os.Open(tfile)
 	if err != nil {
@@ -48,12 +49,12 @@ func sendText(conn net.Conn, pw string) error {
 	if err != nil {
 		return fmt.Errorf("Cannot read textfile: %w", err)
 	}
-	text := string(msg[:ln])
+	text := string(txtBuf[:ln])
 	if !validText(text) {
 		return errors.New("Empty letter")
 	}
-	encText := Symcode(text, pw)
-	sha := HashStr(text)
+	encText := symcod.SymEncode(text, pw)
+	sha := ascod.HashStr(text)
 	letter := Letter{encText, sha}
 	jsl, err := json.Marshal(letter)
 	if err != nil {
@@ -75,7 +76,7 @@ func sendText(conn net.Conn, pw string) error {
 	}
 	fmt.Println("\t The letter's received")
 	
-	err = LinkScanner(text)
+	err = database.LinkScanner(text)
 	if err != nil {
 	  return err
 	}
@@ -85,13 +86,13 @@ func sendText(conn net.Conn, pw string) error {
 }
 
 
-func sendFiles(conn net.Conn) error {
+func SendFiles(conn net.Conn) error {
   srvOk := func() (string, bool) {
     buf := make([]byte, 128) 
     n, err := conn.Read(buf[:])
     if err != nil {
       fmt.Printf("Read error: %s\n", err)
-      return false
+      return "", false
     }
     if m := string(buf[:n]); m != "ok" {
       fmt.Printf("Server error: %s\n", m)
@@ -154,21 +155,21 @@ func sendFiles(conn net.Conn) error {
     msg, ok := srvOk()
     if !ok {
       conn.Close()
-      return errors.New("Server error: ", msg)
+      return errors.New("Server error: " + msg)
     }
-    name := fdir + "/" + uf.Name
+    name := fdir + "/" + uf.Fname
     data, err := os.ReadFile(name)
     if err != nil {
       return fmt.Errorf("File reading error: %w", err)
     }
-    _, err := conn.Write(data)
+    _, err = conn.Write(data)
     if err != nil {
       return fmt.Errorf("Cannot send data: %w", err)
     }
     msg, ok = srvOk()
     if !ok {
       conn.Close()
-      return errors.New("Server error: ", msg)
+      return errors.New("Server error: " + msg)
     }
     err = os.Remove(name)
     if err != nil {
@@ -181,11 +182,11 @@ func sendFiles(conn net.Conn) error {
     }
     send("more")
     if msg, ok = srvOk(); !ok {
-      return errors.New("Server error: ", msg)
+      return errors.New("Server error: " + msg)
     }
   }
-  if msg, ok = srvOk(); !ok {
-      return errors.New("Server error: ", msg)
+  if msg, ok := srvOk(); !ok {
+      return errors.New("Server error: " + msg)
   }
   fmt.Println("\t ✔ SUCCESS")
   return nil
@@ -215,4 +216,17 @@ func makeZip(dir string) (int, error) {
       return 0, fmt.Errorf("Cannot cd back to working dir: %w", err)
    }
    return int(inf.Size()), nil
+}
+
+func anyBytes(b int) string {
+	switch {
+	case b < 1000:
+		return fmt.Sprintf("%d B", b)
+	case b < 1000000:
+		k := float64(b) / 1000
+		return fmt.Sprintf("%.2f kB", k)
+	default:
+		m := float64(b) / 1000000
+		return fmt.Sprintf("%.2f mB", m)
+	}
 }
