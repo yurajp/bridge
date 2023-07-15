@@ -7,19 +7,20 @@ import (
 )
 
 type Config struct {
-  Server Srv
-  Client Clt
-  Db Dbs
+  Appdir string `json:"appdir"`
+  Server Srv `json:"server"`
+  Client Clt `json:"client"`
+  Db Dbs `json:"db"`
 }
 
 type  Srv struct {
-    Port string
+    Port string `json:"port"`
     TxtDir string `json:"txtdir"`
     FileDir string `json:"filedir"`
 }
   
 type  Clt struct {
-    Addr string
+    Addr string `json:"addr"`
     TxtFile string `json:"txtfile"`
     FileDir string `json:"filedir"`
 }
@@ -35,27 +36,37 @@ type Dbs struct {
     PgTable string `json:"pgtable"`
 }
 
-var STORAGE = "/storage/emulated/0/"
+var STORAGE = "/home/yura/"
 
-var DefaultConf = Config{Server: Srv{Port: ":4646",
+var DefaultConf = Config{Server: Appdir: STORAGE + "golangs/bridge/",
+  Srv{Port: ":4545",
     TxtDir: STORAGE + "BridgeTexts",
     FileDir: STORAGE + "BridgeFiles"},
-  Client: Clt{Addr: "http://192.168.1.38:4545",
-    TxtFile: STORAGE + "pc.txt",
+  Client: Clt{Addr: "http://192.168.1.22:4646",
+    TxtFile: STORAGE + "note20.txt", 
     FileDir: STORAGE + "Uploads"},
-  Db: Dbs{SqltPath: "bridge.db",
+  Db: Dbs{SqltPath: STORAGE + "golangs/bridge/database/bridge.db",
     SqltTable: "links",
     PgHost: "localhost",
     PgPort: "5432",
-    PgUser: "yurs",
-    PgPswd: "26335",
-    PgName: "notedb",
-    PgTable: "messer"}}
+    PgUser: "yura",
+    PgPswd: "sql26335",
+    PgName: "yura",
+    PgTable: "notelinks"}}
   
 var Conf Config
 
 func LoadConf() error {
-  jf, err := os.ReadFile("config.json")
+  path := STORAGE + "golangs/bridge/config/config.json"
+  if _, err := os.Stat(path); err != nil {
+    if os.IsNotExist(err) {
+      er = TerminalConfig()
+      if er != nil {
+        return er
+      }
+    }
+  }
+  jf, err := os.ReadFile(path)
   if err != nil {
     return err
   }
@@ -86,7 +97,8 @@ func TerminalConfig() error {
     }
     return s
   }
-  
+  fmt.Println("\t APPDIR:")
+  cf.Server.Appdir = set("application directory", DefaultConf.Appdir)
   fmt.Println("\t SERVER:")
   cf.Server.Port = set("port for server", DefaultConf.Server.Port)
   cf.Server.TxtDir = set("directory for texts", DefaultConf.Server.TxtDir)

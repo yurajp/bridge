@@ -1,22 +1,23 @@
 {
-    "Server": {
-       "Port": ":4646",
-       "txtdir": "/storage/emulated/0/BridgeTexts",
-       "filedir": "/storage/emulated/0/BridgeFiles"
+    "appdir": "/home/yura/golangs/bridge/",
+    "server": {
+       "port": ":4545",
+       "txtdir": "/home/yura/BridgeTexts",
+       "filedir": "/home/yura/BridgeFiles"
     },
-    "Client": {
-       "Addr": "http://192.168.1.38:4545",
-       "txtfile": "/storage/emulated/0/pc.txt",
-       "filedir": "/storage/emulated/0/Uploads"
+    "client": {
+       "addr": "http://192.168.1.22:4646",
+       "txtfile": "/home/yura/note20.txt",
+       "filedir": "/home/yura/Uploads"
     },
-    "Db": {
-       "sqltpath": "bridge.db",
+    "db": {
+       "sqltpath": "/home/yura/golangs/bridge/database/bridge.db",
        "sqlttable": "links",
        "pghost": "localhost",
        "pgport": "5432",
-       "pguser": "yurs",
+       "pguser": "yura",
        "pgpswd": "26335",
-       "PgName": "notedb",
-       "pgtable": "messer"
+       "PgName": "yura",
+       "pgtable": "notelinks"
     }
  }
