@@ -1,0 +1,22 @@
+{
+    "Server": {
+       "Port": ":4646",
+       "txtdir": "/storage/emulated/0/BridgeTexts",
+       "filedir": "/storage/emulated/0/BridgeFiles"
+    },
+    "Client": {
+       "Addr": "http://192.168.1.38:4545",
+       "txtfile": "/storage/emulated/0/pc.txt",
+       "filedir": "/storage/emulated/0/Uploads"
+    },
+    "Db": {
+       "sqltpath": "bridge.db",
+       "sqlttable": "links",
+       "pghost": "localhost",
+       "pgport": "5432",
+       "pguser": "yurs",
+       "pgpswd": "26335",
+       "PgName": "notedb",
+       "pgtable": "messer"
+    }
+ }
