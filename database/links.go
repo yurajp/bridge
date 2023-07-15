@@ -22,21 +22,27 @@ type Link struct {
 
 
 var (
-  dbFile = config.Conf.Db.SqltPath
-  lkTable = config.Conf.Db.SqltTable
+  dbFile string
+  lkTable string
 )
 
+
 func PrepareDb() error {
+  dbFile = config.Conf.Db.SqltPath
+  lkTable = config.Conf.Db.SqltTable
   if _, err := os.Stat(dbFile); err == nil {
     return nil
   }
+  fmt.Println(dbFile, lkTable)
+
   db, err := sql.Open("sqlite3", dbFile)
   if err != nil {
     return err
   }
   defer db.Close()
-  create := `create table if not exists ? (title text, url text, date text) without rowid`
-  _, err = db.Exec(create, lkTable)
+  create := fmt.Sprintf(`create table if not exists %s (title text, url text, date text) without rowid`, lkTable)
+  fmt.Println("  Creating ", lkTable)
+  _, err = db.Exec(create)
   if err != nil {
     return err
   }
@@ -85,17 +91,15 @@ func LinkScanner(text string) error {
 
 
 func handleDb(links []Link) error {
-  err := PrepareDb()
-  if err != nil {
-    return fmt.Errorf("Error when creating table in db: %w", err)
-  }
+  dbFile = config.Conf.Db.SqltPath
+  lkTable = config.Conf.Db.SqltTable
   db, err := sql.Open("sqlite3", dbFile)
   if err != nil {
     return fmt.Errorf("Cannot open database: %w", err)
   }
   defer db.Close()
-  dedup := `DELETE FROM links WHERE link = ?`
-  insert := `INSERT INTO links VALUES(?, ?, ?)`
+  dedup := fmt.Sprintf(`DELETE FROM %s WHERE link = ?`, lkTable)
+  insert := fmt.Sprintf(`INSERT INTO %s VALUES(?, ?, ?)`, lkTable)
   for _, lk := range links {
     _, err = db.Exec(dedup, lk.Url)
     if err != nil {

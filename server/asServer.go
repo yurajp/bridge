@@ -21,9 +21,8 @@ type PassMode struct {
   Mode string
 }
 
-var (
-  port = config.Conf.Server.Port
-)
+var port string
+
 
 func SecureHandle(conn net.Conn) {
   // getting client random
@@ -81,11 +80,12 @@ func SecureHandle(conn net.Conn) {
 }	
 	
 func AsServer() { // (stop chan struct{}) {
+	port = config.Conf.Server.Port
 	listen, err := net.Listen("tcp", port)
 	if err != nil {
 		fmt.Printf("Failed to establish connection: %s\n", err)
 	}
-	fmt.Print("\n\tSERVER started on :4545...\n ")
+	fmt.Printf("\n\tSERVER started on %s...\n ", port)
 	for {
 	  // select {
 	  // case <-stop:  

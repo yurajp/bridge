@@ -38,8 +38,8 @@ type Dbs struct {
 
 var STORAGE = "/home/yura/"
 
-var DefaultConf = Config{Server: Appdir: STORAGE + "golangs/bridge/",
-  Srv{Port: ":4545",
+var DefaultConf = Config{Appdir: STORAGE + "golangs/bridge/",
+  Server: Srv{Port: ":4545",
     TxtDir: STORAGE + "BridgeTexts",
     FileDir: STORAGE + "BridgeFiles"},
   Client: Clt{Addr: "http://192.168.1.22:4646",
@@ -60,7 +60,7 @@ func LoadConf() error {
   path := STORAGE + "golangs/bridge/config/config.json"
   if _, err := os.Stat(path); err != nil {
     if os.IsNotExist(err) {
-      er = TerminalConfig()
+      er := TerminalConfig()
       if er != nil {
         return er
       }
@@ -98,7 +98,7 @@ func TerminalConfig() error {
     return s
   }
   fmt.Println("\t APPDIR:")
-  cf.Server.Appdir = set("application directory", DefaultConf.Appdir)
+  cf.Appdir = set("application directory", DefaultConf.Appdir)
   fmt.Println("\t SERVER:")
   cf.Server.Port = set("port for server", DefaultConf.Server.Port)
   cf.Server.TxtDir = set("directory for texts", DefaultConf.Server.TxtDir)

@@ -16,7 +16,7 @@
        "pghost": "localhost",
        "pgport": "5432",
        "pguser": "yura",
-       "pgpswd": "26335",
+       "pgpswd": "sql26335",
        "PgName": "yura",
        "pgtable": "notelinks"
     }

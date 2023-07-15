@@ -2,7 +2,7 @@ package database
 
 import (
   "database/sql"
-  "os"
+//  "os"
   "fmt"
   "time"
   "github.com/yurajp/bridge/config"
@@ -25,14 +25,14 @@ type PgLink struct {
 }
 
 var (
-  sqltPath = config.Conf.Db.SqltPath
-  sqltTable = config.Conf.Db.SqltTable
-  pgHost = config.Conf.Db.PgHost
-  pgPort = config.Conf.Db.PgPort
-  pgUser = config.Conf.Db.PgUser
-  pgPswd = config.Conf.Db.PgPswd
-  pgName = config.Conf.Db.PgName
-  pgTable = config.Conf.Db.PgTable
+  sqltPath string
+  sqltTable string
+  pgHost string
+  pgPort string
+  pgUser string
+  pgPswd string
+  pgName string
+  pgTable string
 )
 
 
@@ -42,23 +42,33 @@ func (pl PgLink) ToSqlite() SqLink {
 }
 
 func PrepareSqlt() error {
-  if _, err := os.Stat(sqltPath); err == nil {
-    return nil
-  }
+  sqltPath = config.Conf.Db.SqltPath
+  sqltTable = config.Conf.Db.SqltTable
+//  if _, err := os.Stat(sqltPath); err == nil {
+//    return nil
+//  }
   db, err := sql.Open("sqlite3", sqltPath)
   if err != nil {
     return err
   }
   defer db.Close()
-  create := `create table if not exists links (title text, url text, date text) without rowid`
+  create := fmt.Sprintf(`create table if not exists %s (title text, url text, date text)`, sqltTable)
   _, err = db.Exec(create)
   if err != nil {
-    return err
+    return fmt.Errorf("Create table: %w", err)
   }
   return nil
 }
 
 func MigratePgToSqlt() error {
+  sqltPath = config.Conf.Db.SqltPath
+  sqltTable = config.Conf.Db.SqltTable
+  pgHost = config.Conf.Db.PgHost
+  pgPort = config.Conf.Db.PgPort
+  pgUser = config.Conf.Db.PgUser
+  pgPswd = config.Conf.Db.PgPswd
+  pgName = config.Conf.Db.PgName
+  pgTable = config.Conf.Db.PgTable
   err := PrepareSqlt()
   if err != nil {
     return fmt.Errorf("Prepare: %w", err)
@@ -71,8 +81,8 @@ func MigratePgToSqlt() error {
 	}
 	defer pgdb.Close()
 	sqLinks := []SqLink{}
-	query := `select * from $1`
-	rows, err := pgdb.Query(query, pgTable)
+	query := fmt.Sprintf(`select * from %s`, pgTable)
+	rows, err := pgdb.Query(query)
 	if err != nil {
 	  return fmt.Errorf("Postgres query: %w", err)
 	}
@@ -93,12 +103,14 @@ func MigratePgToSqlt() error {
 	if err != nil {
 	  return fmt.Errorf("Open sqlite db: %w", err)
 	}
-	insStat := `insert into ? values (?, ?, ?)`
+  defer sdb.Close()
+	insStat := fmt.Sprintf(`insert into %s values (?, ?, ?)`, sqltTable)
 	for _, slk := range sqLinks {
-	   _, err := sdb.Exec(insStat, sqltTable, slk.Title, slk.Url, slk.Date)
+	   _, err := sdb.Exec(insStat, slk.Title, slk.Url, slk.Date)
 	   if err != nil {
 	     return fmt.Errorf("Insert into sqlite db: %w", err)
 	   }
 	 }
 	 return nil
 }
+

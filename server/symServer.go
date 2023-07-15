@@ -17,8 +17,8 @@ import (
 )
 
 var (
-  tdir = config.Conf.Server.TxtDir
-  fdir = config.Conf.Server.FileDir
+  tdir string
+  fdir string
 )
 
 type Letter struct {
@@ -59,6 +59,7 @@ func writeMonthFile(dir, text string) error {
 
 
 func GetText(conn net.Conn, pw string) {
+	tdir = config.Conf.Server.TxtDir
   defer conn.Close()
   msg := "OK"
   printer := func(m string, err error) {
@@ -85,7 +86,6 @@ func GetText(conn net.Conn, pw string) {
 	  send(msg)
 	  return
 	}
-	
 	text := symcod.SymDecode(lt.Text, pw)
 	if text == "" {
 	  msg = "Empty text"
@@ -120,6 +120,7 @@ func GetText(conn net.Conn, pw string) {
 
 
 func GetFiles(conn net.Conn) {
+	fdir = config.Conf.Server.FileDir
   defer conn.Close()
 	var count = 0
 	

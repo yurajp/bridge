@@ -29,6 +29,7 @@ func main() {
   if iserr(err) {
     return
   }
+
   err = database.PrepareDb()
   if iserr(err) {
     return

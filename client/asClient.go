@@ -18,10 +18,12 @@ type PassMode struct {
 
 var (
   Mode string
-  addr = config.Conf.Client.Addr
+  addr string
 )
 
+
 func AsClient(mode string) error {
+	addr = config.Conf.Client.Addr
 	conn, err := net.Dial("tcp", addr)
 	if err != nil {
 		fmt.Println("\t NO CONNECTION!")
