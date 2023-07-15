@@ -27,8 +27,8 @@ type Upfile struct {
 }
 
 var (
-  tfile = config.Conf.Client.TxtFile
-  fdir = config.Conf.Client.FileDir
+  tfile string
+  fdir string
 )
 
 func validText(txt string) bool {
@@ -37,7 +37,7 @@ func validText(txt string) bool {
 }
 
 func SendText(conn net.Conn, pw string) error {
-  
+  tfile = config.Conf.Client.TxtFile
 	file, err := os.Open(tfile)
 	if err != nil {
 		return fmt.Errorf("Cannot open textfile to read: %w", err)
@@ -87,6 +87,7 @@ func SendText(conn net.Conn, pw string) error {
 
 
 func SendFiles(conn net.Conn) error {
+  fdir = config.Conf.Client.FileDir
   srvOk := func() (string, bool) {
     buf := make([]byte, 128) 
     n, err := conn.Read(buf[:])

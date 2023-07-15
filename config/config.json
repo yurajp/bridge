@@ -1,23 +1,23 @@
 {
-    "Appdir": "/data/data/com.termux/files/home/golangs/bridge-mobile/"
-    "Server": {
-       "Port": ":4646",
+    "appdir": "/data/data/com.termux/files/home/golangs/bridge-mobile/",
+    "server": {
+       "port": ":4646",
        "txtdir": "/storage/emulated/0/BridgeTexts",
        "filedir": "/storage/emulated/0/BridgeFiles"
     },
-    "Client": {
-       "Addr": "http://192.168.1.38:4545",
+    "client": {
+       "addr": "http://192.168.1.38:4545",
        "txtfile": "/storage/emulated/0/pc.txt",
        "filedir": "/storage/emulated/0/Uploads"
     },
-    "Db": {
+    "db": {
        "sqltpath": "/data/data/com.termux/files/home/golangs/bridge-mobile/database/bridge.db",
        "sqlttable": "links",
        "pghost": "localhost",
        "pgport": "5432",
        "pguser": "yura",
        "pgpswd": "26335",
-       "PgName": "notedb",
+       "pgname": "notedb",
        "pgtable": "messer"
     }
  }
