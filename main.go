@@ -40,12 +40,21 @@ func main() {
   }
   if len(args) == 1 {
     go server.AsServer()
+    wait()
+  } else {
+    if args[1] == "text" {
+      go client.AsClient("text")
+      wait()
+    }
+    if args[1] == "files" {
+      go client.AsClient("files")
+      wait()
+    }
+    if args[1] == "migrate" {
+      err := database.MigratePgToSqlt()
+      if err != nil {
+        fmt.Println(err)
+      }
+    }
   }
-  if args[1] == "text" {
-    go client.AsClient("text")
-  }
-  if args[1] == "files" {
-    go client.AsClient("files")
-  }
-  wait()
 }
