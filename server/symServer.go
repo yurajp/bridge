@@ -131,7 +131,6 @@ func GetFiles(conn net.Conn) {
 	printer := func(m string, err error) {
 	  fmt.Printf("%s: %s\n", m, err)
 	}
-	
 	msg := ""
 	
 	for {
@@ -156,7 +155,7 @@ func GetFiles(conn net.Conn) {
 		}
 		send("ok")
 		
-		fmt.Printf("\n\t Downloading %s (%s)\n", u.Fname, anyBytes(u.Fsize))
+		fmt.Printf("\n\tDownloading %s (%s)\n", u.Fname, anyBytes(u.Fsize))
 		dname := fdir + "/" + u.Fname
 		data := make([]byte, 0)
 		size := 0
@@ -228,6 +227,7 @@ func GetFiles(conn net.Conn) {
 		}
 		send("ok")
 	}
+	send("ok")
 	ss := "s"
 	if count == 1 {
 		ss = ""

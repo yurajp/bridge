@@ -67,7 +67,7 @@ func SecureHandle(conn net.Conn) {
 	mode := symcod.SymDecode(encPM.Mode, decPwd)
   sOk := ascod.SrvEncodeString("OK", priv)
   // define further action
-	if mode == "file" {
+	if mode == "files" {
 	  conn.Write([]byte(sOk))
     go GetFiles(conn)
 	} else if mode == "text" {
@@ -85,7 +85,7 @@ func AsServer() { // (stop chan struct{}) {
 	if err != nil {
 		fmt.Printf("Failed to establish connection: %s\n", err)
 	}
-	fmt.Printf("\n\tSERVER started on %s...\n ", port)
+	fmt.Printf("\n\t  SERVER started on %s...\n ", port)
 	for {
 	  // select {
 	  // case <-stop:  

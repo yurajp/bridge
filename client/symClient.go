@@ -93,8 +93,8 @@ func SendFiles(conn net.Conn) error {
     buf := make([]byte, 128) 
     n, err := conn.Read(buf[:])
     if err != nil {
-      fmt.Printf("Read error: %s\n", err)
-      return "", false
+      fmt.Printf("Read 'OK' error: %s\n", err)
+      return "None", false
     }
     if m := string(buf[:n]); m != "ok" {
       fmt.Printf("Server error: %s\n", m)

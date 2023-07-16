@@ -18,7 +18,7 @@ func iserr(err error) bool {
 }
 
 func wait() {
-  fmt.Println("\n   Enter to quit")
+  fmt.Println("\n\t  Enter to quit\n")
   var q string
   fmt.Scanf("%s", &q)
 }
