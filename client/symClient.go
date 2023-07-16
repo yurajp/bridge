@@ -74,7 +74,7 @@ func SendText(conn net.Conn, pw string) error {
 	if res != "OK" {
 	  return errors.New("Server: " + res)
 	}
-	fmt.Println("\t The letter's received")
+	fmt.Println("   The letter's received")
 	
 	err = database.LinkScanner(text)
 	if err != nil {

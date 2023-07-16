@@ -64,6 +64,7 @@ func SecureHandle(conn net.Conn) {
 	decPwd := ascod.SrvDecodeString(encPM.Password, priv)
 	mode := symcod.SymDecode(encPM.Mode, decPwd)
   sOk := ascod.SrvEncodeString("OK", priv)
+  
   // define further action
 	if mode == "file" {
 	  conn.Write([]byte(sOk))

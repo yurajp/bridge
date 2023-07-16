@@ -6,7 +6,7 @@
        "filedir": "/storage/emulated/0/BridgeFiles"
     },
     "client": {
-       "addr": "http://192.168.1.38:4545",
+       "addr": "192.168.1.38:4545",
        "txtfile": "/storage/emulated/0/pc.txt",
        "filedir": "/storage/emulated/0/Uploads"
     },

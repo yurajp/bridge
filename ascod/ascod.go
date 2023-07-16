@@ -217,6 +217,7 @@ func ClEncConfirm(pb PubKey) string {
 }
 
 func IsClConfirmed(ok string, pb PubKey) bool {
-  return ClDecodeString(ok, pb) == "OK"
+  dcs := ClDecodeString(ok, pb) 
+  return dcs == "OK"
 }
 

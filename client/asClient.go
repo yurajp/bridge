@@ -16,10 +16,7 @@ type PassMode struct {
   Mode string
 }
 
-var (
-  Mode string
-  addr string
-)
+var addr string
 
 func AsClient(mode string) error {
   addr = config.Conf.Client.Addr
@@ -60,7 +57,7 @@ func AsClient(mode string) error {
 	pass := ascod.GeneratePassword(9)
 	encPw := ascod.ClEncodeString(pass, pub)
 	// Symmetric encoding Mode. It will be also used for password checking by server.
-	encMode:= symcod.SymEncode(Mode, pass)
+	encMode:= symcod.SymEncode(mode, pass)
 	// inserting both into struct and sending to server
 	passMd := PassMode{encPw, encMode}
 	jsPm, err := json.Marshal(passMd)
@@ -71,7 +68,7 @@ func AsClient(mode string) error {
 	if err != nil {
 	  return fmt.Errorf("Cannot write passMode: %w", err)
 	}
-	srvConfirm := make([]byte, 64)
+	srvConfirm := make([]byte, 128)
 	p, err := conn.Read(srvConfirm[:])
 	if err != nil {
 	  return fmt.Errorf("Cannot read confirmation: %w",err)

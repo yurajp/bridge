@@ -97,7 +97,7 @@ func handleDb(links []Link) error {
     return fmt.Errorf("Cannot open database: %w", err)
   }
   defer db.Close()
-  dedup := fmt.Sprintf(`DELETE FROM %s WHERE link = ?`, lkTable)
+  dedup := fmt.Sprintf(`DELETE FROM %s WHERE url = ?`, lkTable)
   insert := fmt.Sprintf(`INSERT INTO %s VALUES(?, ?, ?)`, lkTable)
   for _, lk := range links {
     _, err = db.Exec(dedup, lk.Url)
