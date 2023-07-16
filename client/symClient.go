@@ -29,12 +29,19 @@ type Upfile struct {
 var (
   tfile string
   fdir string
+  Res = make(chan struct{}, 1)
+  Result = []string{}
 )
 
 func validText(txt string) bool {
    re := regexp.MustCompile(`\w`)
    return re.Match([]byte(txt))
 }
+
+func sendToWeb(rs string) {
+  Result = append(Result, rs)
+}
+
 
 func SendText(conn net.Conn, pw string) error {
   tfile = config.Conf.Client.TxtFile
@@ -74,14 +81,17 @@ func SendText(conn net.Conn, pw string) error {
 	if res != "OK" {
 	  return errors.New("Server: " + res)
 	}
-	fmt.Println("   The letter's received")
-	
+	ms := "The letter's received"
+	fmt.Println("   ", ms)
+	sendToWeb(ms)
 	x, err := database.LinkScanner(text)
 	if err != nil {
 	  return err
 	}
 	if x > 0 {
-	  fmt.Printf("\t Links are stored\n", x)
+	  tr := fmt.Sprintf("\t%d links are stored\n", x)
+	  fmt.Println(tr)
+	  sendToWeb(tr)
 	}
 	return nil
 }
@@ -190,6 +200,8 @@ func SendFiles(conn net.Conn) error {
   if msg, ok := srvOk(); !ok {
       return errors.New("Server error: " + msg)
   }
+  wr := fmt.Sprintf("Uploaded %d file(s), total %s", n, anyBytes(sz))
+  sendToWeb(wr)
   fmt.Println("\t ✔ SUCCESS")
   return nil
 }

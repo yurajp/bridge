@@ -80,14 +80,20 @@ func AsClient(mode string) error {
   if mode == "text" {
 	  err = SendText(conn, pass)
 	  if err != nil {
+	    sendToWeb("ServerError")
+	    Res <-struct{}{}
 	    return err
 	  }
+	  Res <-struct{}{}
   } 
   if mode == "files" {
 	  err = SendFiles(conn)
 	  if err != nil {
+	    sendToWeb("ServerError")
+	    Res <-struct{}{}
 	    return err
 	  }
+	  Res <-struct{}{}
   }
   return nil
 }

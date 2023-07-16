@@ -33,44 +33,40 @@ func main() {
   if iserr(err) {
     return
   }
-  args := os.Args
-  if len(args) > 2 {
-    fmt.Println("Wrong arguments")
-    return
-  }
-  if len(args) == 1 {
+  go web.Launcher()
+  mode := <-web.Cmod
+  if mode == "server" {
     go server.AsServer()
     wait()
-  } else {
-    if args[1] == "text" {
-      go func() {
-        err := client.AsClient("text")
-        if err != nil {
-          fmt.Println(err)
-        }
-      }()
-      wait()
-    }
-    if args[1] == "files" {
-      go func() {
-        err := client.AsClient("files")
-        if err != nil {
-          fmt.Println(err)
-        }
-      }()
-      wait()
-    }
-    if args[1] == "config" {
-      err := config.TerminalConfig()
+  } 
+  if mode == "text" {
+    go func() {
+      err := client.AsClient("text")
       if err != nil {
         fmt.Println(err)
       }
-    }
-    if args[1] == "migrate" {
-      err := database.MigratePgToSqlt()
+    }()
+    wait()
+  }
+  if mode == "files" {
+    go func() {
+      err := client.AsClient("files")
       if err != nil {
         fmt.Println(err)
       }
+    }()
+    wait()
+  }
+  if mode == "config" {
+    err := config.TerminalConfig()
+    if err != nil {
+      fmt.Println(err)
+    }
+  }
+  if mode == "migrate" {
+    err := database.MigratePgToSqlt()
+    if err != nil {
+      fmt.Println(err)
     }
   }
 }
