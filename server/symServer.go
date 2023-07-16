@@ -109,11 +109,14 @@ func GetText(conn net.Conn, pw string) {
 	  }
 	}()
 	
-	err = database.LinkScanner(text)
+	y, err := database.LinkScanner(text)
 	if err != nil {
 	  msg = "Database error"
 	  printer(msg, err)
 	  send(msg)
+	}
+	if y > 0 {
+		fmt.Printf("\t%d links are stored\n", y)
 	}
 	send("OK")
 }
