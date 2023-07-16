@@ -7,6 +7,7 @@ import (
   "github.com/yurajp/bridge/database"
   "github.com/yurajp/bridge/server"
   "github.com/yurajp/bridge/client"
+  "github.com/yurajp/bridge/web"
 )
 
 func iserr(err error) bool {

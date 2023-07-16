@@ -4,6 +4,7 @@ import (
   "net/http"
   "html/template"
   "os/exec"
+  "fmt"
   "github.com/yurajp/bridge/config"
   "github.com/yurajp/bridge/client"
 )
@@ -14,6 +15,30 @@ var (
   clTempl *template.Template
   Cmode = make(chan string, 1)
 )
+
+
+func init() {
+  fmt.Println("web inited")
+  
+  hm, err := template.ParseFiles("./files/hmTmpl.html")
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    hmTmpl = hm
+  }
+  sr, err := template.ParseFiles("./files/srTmpl.html")
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    srTmpl = sr
+  }
+  cl, err := template.ParseFiles("./files/clTmpl.html")
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    clTmpl = cl
+  }
+}
 
 func home(w http.ResponseWriter, r *http.Request) {
   hmTmpl.Execute(w, nil)
@@ -51,17 +76,13 @@ func filesLauncher(w http.ResponseWriter, r *http.Request) {
 func Launcher() {
   mux := http.NewServeMux()
   mux.HandleFunc("/", home)
-  mux.HandleFunc("/server", serverHandler)
+  mux.HandleFunc("/server", serverLauncher)
   mux.HandleFunc("/text", textLauncher)
   mux.HandleFunc("/files", filesLauncher)
   fs := http.FileServer(http.Dir("./files"))
   mux.Handle("/files/", http.StripPrefix("/files/", fs))
-  hmTmpl, _ = template.ParseFiles("./files/hmTmpl.html")
-  srTmpl, _ = template.ParseFiles("./files/srTmpl.html")
-  clTmpl, _ = template.ParseFiles("./files/clTmpl.html")
   hsrv := &http.Server{Addr: ":8642", Handler: mux}
   
   go hsrv.ListenAndServe()
   exec.Command("xdg-open", "http://localhost:8642").Run()
-  <-Q
 }
