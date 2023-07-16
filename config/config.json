@@ -6,7 +6,7 @@
        "filedir": "/home/yura/BridgeFiles"
     },
     "client": {
-       "addr": "http://192.168.1.22:4646",
+       "addr": "192.168.1.22:4646",
        "txtfile": "/home/yura/note20.txt",
        "filedir": "/home/yura/Uploads"
     },

@@ -16,10 +16,7 @@ type PassMode struct {
   Mode string
 }
 
-var (
-  Mode string
-  addr string
-)
+var addr string
 
 
 func AsClient(mode string) error {
@@ -61,7 +58,7 @@ func AsClient(mode string) error {
 	pass := ascod.GeneratePassword(9)
 	encPw := ascod.ClEncodeString(pass, pub)
 	// Symmetric encoding Mode. It will be also used for password checking by server.
-	encMode:= symcod.SymEncode(Mode, pass)
+	encMode:= symcod.SymEncode(mode, pass)
 	// inserting both into struct and sending to server
 	passMd := PassMode{encPw, encMode}
 	jsPm, err := json.Marshal(passMd)
@@ -82,12 +79,14 @@ func AsClient(mode string) error {
 		 return errors.New("Password is not confirmed")
   }
   if mode == "text" {
+  	fmt.Println("\t sending text...")
 	  err = SendText(conn, pass)
 	  if err != nil {
 	    return err
 	  }
   } 
-  if mode == "file" {
+  if mode == "files" {
+  	fmt.Println("\t sending files...")
 	  err = SendFiles(conn)
 	  if err != nil {
 	    return err

@@ -53,7 +53,7 @@ func main() {
       wait()
     }
     if args[1] == "files" {
-      go func() {
+        go func() {
         err := client.AsClient("files")
         if err != nil {
           fmt.Println(err)
