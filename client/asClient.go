@@ -83,7 +83,7 @@ func AsClient(mode string) error {
 	    return err
 	  }
   } 
-  if mode == "file" {
+  if mode == "files" {
 	  err = SendFiles(conn)
 	  if err != nil {
 	    return err

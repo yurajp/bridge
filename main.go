@@ -18,7 +18,7 @@ func iserr(err error) bool {
 }
 
 func wait() {
-  fmt.Println("\n\t Enter to quit")
+  fmt.Println("\n\tEnter to quit")
   var q string
   fmt.Scanf("%s", &q)
 }
@@ -49,7 +49,6 @@ func main() {
           fmt.Println(err)
         }
       }()
-      wait()
     }
     if args[1] == "files" {
       go func() {
@@ -58,7 +57,6 @@ func main() {
           fmt.Println(err)
         }
       }()
-      wait()
     }
     if args[1] == "config" {
       err := config.TerminalConfig()

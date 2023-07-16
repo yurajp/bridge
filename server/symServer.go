@@ -228,6 +228,7 @@ func GetFiles(conn net.Conn) {
 		}
 		send("ok")
 	}
+	send("ok")
 	ss := "s"
 	if count == 1 {
 		ss = ""
