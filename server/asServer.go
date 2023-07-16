@@ -66,7 +66,7 @@ func SecureHandle(conn net.Conn) {
   sOk := ascod.SrvEncodeString("OK", priv)
   
   // define further action
-	if mode == "file" {
+	if mode == "files" {
 	  conn.Write([]byte(sOk))
     go GetFiles(conn)
 	} else if mode == "text" {
