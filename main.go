@@ -49,6 +49,7 @@ func main() {
           fmt.Println(err)
         }
       }()
+      wait()
     }
     if args[1] == "files" {
       go func() {
@@ -57,6 +58,7 @@ func main() {
           fmt.Println(err)
         }
       }()
+      wait()
     }
     if args[1] == "config" {
       err := config.TerminalConfig()
