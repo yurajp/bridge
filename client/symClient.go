@@ -76,12 +76,13 @@ func SendText(conn net.Conn, pw string) error {
 	}
 	fmt.Println("   The letter's received")
 	
-	err = database.LinkScanner(text)
+	x, err := database.LinkScanner(text)
 	if err != nil {
 	  return err
 	}
-	fmt.Println("\t Links are stored")
-	
+	if x > 0 {
+	  fmt.Printf("\t Links are stored\n", x)
+	}
 	return nil
 }
 

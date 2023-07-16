@@ -65,7 +65,7 @@ func ScrapeTitle(url string) string {
 	return title
 }
 
-func LinkScanner(text string) error {
+func LinkScanner(text string) (int, error) {
   url := regexp.MustCompile(`http(s)?://*`)
   sc := bufio.NewScanner(strings.NewReader(text))
   linksDb := []Link{}
@@ -79,22 +79,22 @@ func LinkScanner(text string) error {
     }
   }
   if len(linksDb) == 0 {
-    return nil
+    return 0, nil
   }
   return handleDb(linksDb)
 }
 
 
-func handleDb(links []Link) error {
+func handleDb(links []Link) (int, error) {
   dbFile = config.Conf.Db.SqltPath
   lkTable = config.Conf.Db.SqltTable
   err := PrepareDb()
   if err != nil {
-    return fmt.Errorf("Error when creating table in db: %w", err)
+    return 0, fmt.Errorf("Error when creating table in db: %w", err)
   }
   db, err := sql.Open("sqlite3", dbFile)
   if err != nil {
-    return fmt.Errorf("Cannot open database: %w", err)
+    return 0, fmt.Errorf("Cannot open database: %w", err)
   }
   defer db.Close()
   dedup := fmt.Sprintf(`DELETE FROM %s WHERE url = ?`, lkTable)
@@ -102,12 +102,12 @@ func handleDb(links []Link) error {
   for _, lk := range links {
     _, err = db.Exec(dedup, lk.Url)
     if err != nil {
-      return fmt.Errorf("Error when delete duplicate from db: %w", err)
+      return 0, fmt.Errorf("Error when delete duplicate from db: %w", err)
     }
     _, err = db.Exec(insert, lk.Title, lk.Url, lk.Date)
     if err != nil {
-      return fmt.Errorf("Error when insert into db: %w", err)
+      return 0, fmt.Errorf("Error when insert into db: %w", err)
     }
   }
-  return nil
+  return len(links), nil
 }
