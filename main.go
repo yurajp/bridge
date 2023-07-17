@@ -18,9 +18,7 @@ func iserr(err error) bool {
 }
 
 func wait() {
-  fmt.Println("\n\tEnter to quit")
-  var q string
-  fmt.Scanf("%s", &q)
+  <-web.Q
 }
 
 

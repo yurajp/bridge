@@ -9,8 +9,11 @@
     <div class="field">
       <h1>RESULT</h1>
       {{ range . }}
-      <p>{{ . }}</p>
+      <p class="message">{{ . }}</p>
       {{ end }}
+    </div>
+    <div class="sfield">
+      <button id="quit" onclick="window.location.href='http://localhost:8642/quit'" target="_self">✘</button>
     </div>
   </body>
 </html>

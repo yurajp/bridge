@@ -17,7 +17,9 @@ var (
   hmTmpl *template.Template
   srTmpl *template.Template
   clTmpl *template.Template
+  blTmpl *template.Template
   Cmode = make(chan string, 1)
+  Q = make(chan struct{}, 1)
 )
 
 
@@ -41,6 +43,12 @@ func init() {
   } else {
     clTmpl = cl
   }
+  bl, err := template.ParseFS(webDir, "files/blank.html")
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    blTmpl = bl
+  }
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -50,7 +58,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 func serverLauncher(w http.ResponseWriter, r *http.Request) {
   Cmode <-"server"
   port := config.Conf.Server.Port
-  serv := fmt.Sprintf("Bridge server is runing on %s", port)
+  serv := fmt.Sprintf("server is runing on %s", port)
   srTmpl.Execute(w, serv)
 }
 
@@ -77,12 +85,18 @@ func filesLauncher(w http.ResponseWriter, r *http.Request) {
   }
 }
 
+func quit(w http.ResponseWriter, r *http.Request) {
+  blTmpl.Execute(w, nil)
+  Q <-struct{}{}
+}
+
 func Launcher() {
   mux := http.NewServeMux()
   mux.HandleFunc("/", home)
   mux.HandleFunc("/server", serverLauncher)
   mux.HandleFunc("/text", textLauncher)
   mux.HandleFunc("/files", filesLauncher)
+  mux.HandleFunc("/quit", quit)
   mux.Handle("/files/", fs)
   hsrv := &http.Server{Addr: ":8642", Handler: mux}
   

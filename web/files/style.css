@@ -1,0 +1,80 @@
+.field {
+  display: block;
+  margin: 60px 40px;
+  padding: 80px 60px;
+  background: antiquewhite;
+  border: 6px solid darkgray;
+  border-radius: 128px;
+}
+
+.field h1 {
+  text-align: center;
+  font-size: 80px;
+  color: gray;
+  font-family: sans;
+}
+.sfield {
+  display: flex;
+  margin: 40px;
+  padding: 60px;
+  justify-content: center;
+}
+
+.builtin {
+  display: flex;
+  margin: 100px 10px;
+  padding: 80px;
+  justify-content: space-between;
+}
+
+#server {
+  text-align: center;
+  padding: 40px 120px;
+  font-size: 40px;
+  color: white;
+  background-color: darkslategray;
+  border: 1px solid gray;
+  border-radius: 160px;
+}
+
+.clbut {
+  display: block-inline;
+  margin: 60px;
+  padding: 30px 80px;
+  text-align: center;
+  font-size: 30px;
+  background-color: darkslategray;
+  color: white;
+  border: 1px solid gray;
+  border-radius: 60px;
+}
+
+#working {
+  display: block;
+  margin: 100px 10px;
+  padding: 80px 40px;
+  background-color: darkgreen;
+  opacity: 0.7;
+  border: 1px solid gray;
+  border-radius: 24px;
+}
+#working h2 {
+  text-align: center;
+  font-size: 40px;
+  color: white;
+}
+
+#quit {
+  text-align: center;
+  padding: 30px 50px;
+  font-size: 60px;
+  color: red;
+  background: none;
+  border: 4px solid orange;
+  border-radius: 160px;
+}
+
+.field .message {
+  padding: 40px 80px;
+  font-size: 2.8rem;
+}

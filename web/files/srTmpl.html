@@ -7,7 +7,18 @@
   </head>
   <body>
     <div class="field">
-      <h3></h3>{{ . }}</h3>
+      <h1>BRIDGE</h1>
+        <div id="working">
+          <h2>{{ . }}</h2>
+        </div>
+        <br>
+      <div id="builtin">
+      <button class="clbut" onclick="window.location.href='http://localhost:8642/text'" target="_blank">TEXT</button>
+      <button class="clbut" onclick="window.location.href='http://localhost:8642/files'" target="_blank">FILES</button>
+      </div>
+      <div class="sfield">
+        <button id="quit" onclick="window.location.href='http://localhost:8642/quit'" target="_self">✘</button>
+      </div>
     </div>
   </body>
 </html>

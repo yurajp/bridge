@@ -7,12 +7,16 @@
   </head>
   <body>
     <div class="field">
-      <button id="server" onclick="window.location.href='http://localhost:8642/server'">SERVER</button>
-    </div>
-    <div id="builtin">
-      <button id="client1" onclick="window.location.href='http://localhost:8642/text'" target="_blank">TEXT</button>
-      
-      <button id="client2" onclick="window.location.href='http://localhost:8642/files'" target="_blank">FILES</button>
+      <h1>BRIDGE</h1>
+      <div class="sfield">
+      <button id="server" onclick="window.location.href='http://localhost:8642/server'" target="_self">SERVER</button>
+      </div>
+      <div id="builtin">
+      <button class="clbut" onclick="window.location.href='http://localhost:8642/text'" target="_blank">TEXT</button>
+      <button class="clbut" onclick="window.location.href='http://localhost:8642/files'" target="_blank">FILES</button>
+      </div>
+      <div class="sfield">
+        <button id="quit" onclick="window.location.href='http://localhost:8642/quit'" target="_self">✘</button>
       </div>
     </div>
   </body>
