@@ -2,7 +2,6 @@ package main
 
 import (
   "fmt"
-  "os"
   "github.com/yurajp/bridge/config"
   "github.com/yurajp/bridge/database"
   "github.com/yurajp/bridge/server"
@@ -35,13 +34,14 @@ func main() {
     return
   }
   go web.Launcher()
-  mode := <-web.Cmod
+  mode := <-web.Cmode
   if mode == "server" {
     go server.AsServer()
     wait()
   } 
   if mode == "text" {
     go func() {
+      fmt.Println("\n\t TEXT")
       err := client.AsClient("text")
       if err != nil {
         fmt.Println(err)
@@ -51,6 +51,7 @@ func main() {
   }
   if mode == "files" {
     go func() {
+      fmt.Println("\n\t FILES")
       err := client.AsClient("files")
       if err != nil {
         fmt.Println(err)

@@ -77,6 +77,7 @@ func AsClient(mode string) error {
   if !ascod.IsClConfirmed(sCf, pub) {
 		 return errors.New("Password is not confirmed")
   }
+  
   if mode == "text" {
 	  err = SendText(conn, pass)
 	  if err != nil {
