@@ -19,6 +19,7 @@ var (
   clTmpl *template.Template
   blTmpl *template.Template
   Cmode = make(chan string, 1)
+  SrvUp bool
   Q = make(chan struct{}, 1)
 )
 
@@ -60,6 +61,7 @@ func serverLauncher(w http.ResponseWriter, r *http.Request) {
   port := config.Conf.Server.Port
   serv := fmt.Sprintf("server is runing on %s", port)
   srTmpl.Execute(w, serv)
+  SrvUp = true
 }
 
 func textLauncher(w http.ResponseWriter, r *http.Request) {
@@ -86,7 +88,7 @@ func filesLauncher(w http.ResponseWriter, r *http.Request) {
 }
 
 func quit(w http.ResponseWriter, r *http.Request) {
-  blTmpl.Execute(w, nil)
+  blTmpl.Execute(w, "Bridge closed")
   Q <-struct{}{}
 }
 

@@ -17,11 +17,6 @@ func iserr(err error) bool {
   return false
 }
 
-func wait() {
-  <-web.Q
-}
-
-
 func main() {
   err := config.LoadConf()
   if iserr(err) {
@@ -32,41 +27,50 @@ func main() {
     return
   }
   go web.Launcher()
-  mode := <-web.Cmode
-  if mode == "server" {
-    go server.AsServer()
-    wait()
-  } 
-  if mode == "text" {
-    go func() {
-      fmt.Println("\n\t TEXT")
-      err := client.AsClient("text")
-      if err != nil {
-        fmt.Println(err)
+  Main:
+  for {
+    select {
+    case mode := <-web.Cmode:
+      if mode == "server" {
+        if web.SrvUp {
+          fmt.Println("  Server already running")
+        } else {
+          go server.AsServer()
+        }
+      } 
+      if mode == "text" {
+        go func() {
+          fmt.Println("\n\t TEXT")
+          err := client.AsClient("text")
+          if err != nil {
+            fmt.Println(err)
+          }
+        }()
       }
-    }()
-    wait()
-  }
-  if mode == "files" {
-    go func() {
-      fmt.Println("\n\t FILES")
-      err := client.AsClient("files")
-      if err != nil {
-        fmt.Println(err)
+      if mode == "files" {
+        go func() {
+          fmt.Println("\n\t FILES")
+          err := client.AsClient("files")
+          if err != nil {
+            fmt.Println(err)
+          }
+        }()
       }
-    }()
-    wait()
-  }
-  if mode == "config" {
-    err := config.TerminalConfig()
-    if err != nil {
-      fmt.Println(err)
-    }
-  }
-  if mode == "migrate" {
-    err := database.MigratePgToSqlt()
-    if err != nil {
-      fmt.Println(err)
+      if mode == "config" {
+        err := config.TerminalConfig()
+        if err != nil {
+          fmt.Println(err)
+        }
+      }
+      if mode == "migrate" {
+        err := database.MigratePgToSqlt()
+        if err != nil {
+          fmt.Println(err)
+        }
+      }
+    case <-web.Q:
+      break Main
+    default:
     }
   }
 }
