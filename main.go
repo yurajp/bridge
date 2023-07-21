@@ -2,6 +2,7 @@ package main
 
 import (
   "fmt"
+  "time"
   "github.com/yurajp/bridge/config"
   "github.com/yurajp/bridge/database"
   "github.com/yurajp/bridge/server"
@@ -70,7 +71,9 @@ func main() {
       }
     case <-web.Q:
       break Main
-    default:
+  //
     }
   }
+  fmt.Println("\t CLOSED")
+  time.Sleep(3 * time.Second)
 }

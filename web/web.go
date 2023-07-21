@@ -53,7 +53,13 @@ func init() {
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
-  hmTmpl.Execute(w, nil)
+  if SrvUp {
+    port := config.Conf.Server.Port
+    serv := fmt.Sprintf("server is runing on %s", port)
+    srTmpl.Execute(w, serv)
+  } else {
+    hmTmpl.Execute(w, nil)
+  }
 }
 
 func serverLauncher(w http.ResponseWriter, r *http.Request) {
@@ -88,7 +94,10 @@ func filesLauncher(w http.ResponseWriter, r *http.Request) {
 }
 
 func quit(w http.ResponseWriter, r *http.Request) {
-  blTmpl.Execute(w, "Bridge closed")
+  err := blTmpl.Execute(w, "Bridge closed")
+  if err != nil {
+    fmt.Println(err)
+  }
   Q <-struct{}{}
 }
 
