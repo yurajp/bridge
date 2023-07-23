@@ -37,6 +37,7 @@ func main() {
           fmt.Println("  Server already running")
         } else {
           go server.AsServer()
+          fmt.Println("\n\t BRIDGE server running\n")
         }
       } 
       if mode == "text" {

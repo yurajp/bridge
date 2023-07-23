@@ -8,6 +8,7 @@ import (
   "embed"
   "github.com/yurajp/bridge/config"
   "github.com/yurajp/bridge/client"
+  "github.com/yurajp/bridge/server"
 )
 
 var (
@@ -26,30 +27,10 @@ var (
 
 func init() {
   fs = http.FileServer(http.FS(webDir))
-  hm, err := template.ParseFS(webDir, "files/hmTmpl.html")
-  if err != nil {
-    fmt.Println(err)
-  } else {
-    hmTmpl = hm
-  }
-  sr, err := template.ParseFS(webDir, "files/srTmpl.html")
-  if err != nil {
-    fmt.Println(err)
-  } else {
-    srTmpl = sr
-  }
-  cl, err := template.ParseFS(webDir, "files/clTmpl.html")
-  if err != nil {
-    fmt.Println(err)
-  } else {
-    clTmpl = cl
-  }
-  bl, err := template.ParseFS(webDir, "files/blank.html")
-  if err != nil {
-    fmt.Println(err)
-  } else {
-    blTmpl = bl
-  }
+  hmTmpl, _ = template.ParseFS(webDir, "files/hmTmpl.html")
+  srTmpl, _ = template.ParseFS(webDir, "files/srTmpl.html")
+  clTmpl, _ = template.ParseFS(webDir, "files/clTmpl.html")
+  blTmpl, _ = template.ParseFS(webDir, "files/blank.html")
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -64,9 +45,8 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 func serverLauncher(w http.ResponseWriter, r *http.Request) {
   Cmode <-"server"
-  port := config.Conf.Server.Port
-  serv := fmt.Sprintf("server is runing on %s", port)
-  srTmpl.Execute(w, serv)
+ // port := config.Conf.Server.Port
+  srTmpl.Execute(w, server.ToWeb)
   SrvUp = true
 }
 
@@ -88,10 +68,12 @@ func filesLauncher(w http.ResponseWriter, r *http.Request) {
     select {
     case <-client.Res:
       clTmpl.Execute(w, client.Result)
+      return
       default:
     }
   }
 }
+
 
 func quit(w http.ResponseWriter, r *http.Request) {
   err := blTmpl.Execute(w, "Bridge closed")

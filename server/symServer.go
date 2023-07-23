@@ -17,6 +17,7 @@ import (
 )
 
 var (
+  ToWeb []string
   tdir string
   fdir string
 )
@@ -44,6 +45,10 @@ func anyBytes(b int) string {
 		m := float64(b) / 1000000
 		return fmt.Sprintf("%.2f mB", m)
 	}
+}
+
+func toWeb(s string) {
+  ToWeb = append(ToWeb, s)
 }
 
 func writeMonthFile(dir, text string) error {
@@ -108,6 +113,9 @@ func GetText(conn net.Conn, pw string) {
 	    m := "Cannot write text in file: "
 	    fmt.Println(m, err)
 	  }
+	  tw := "@ A letter was received and stored"
+    fmt.Println(tw)
+    toWeb(tw)
 	}()
 	
 	x, err := database.LinkScanner(text)
@@ -117,7 +125,13 @@ func GetText(conn net.Conn, pw string) {
 	  send(msg)
 	}
 	if x > 0 {
-	  fmt.Printf("  %d links are stored\n", x)
+	  sfx := "s are"
+	  if x == 1 {
+	    sfx = " is"
+	  }
+	  tw2 := fmt.Sprintf("@ %d link%s stored", sfx, x)
+	  fmt.Println(tw2)
+	  toWeb(tw2)
 	}
 	send("OK")
 }

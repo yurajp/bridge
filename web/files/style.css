@@ -52,11 +52,11 @@
 #working {
   display: block;
   margin: 100px 10px;
-  padding: 80px 40px;
+  padding: 26px 40px;
   background-color: darkgreen;
   opacity: 0.7;
   border: 1px solid gray;
-  border-radius: 24px;
+  border-radius: 48px;
 }
 #working h2 {
   text-align: center;
@@ -69,7 +69,7 @@
   padding: 30px 50px;
   font-size: 60px;
   color: red;
-  background: none;
+  background: white;
   border: 4px solid orange;
   border-radius: 160px;
 }
@@ -77,4 +77,19 @@
 .field .message {
   padding: 40px 80px;
   font-size: 2.8rem;
+}
+
+#received {
+  display: block;
+  margin: 100px 10px;
+  padding: 26px 40px;
+  background-color: pink;
+  opacity: 0.9;
+  border: 1px solid gray;
+  border-radius: 48px;
+}
+
+#received p {
+  font-size: 42px;
+  font-family: sans;
 }

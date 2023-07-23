@@ -8,10 +8,17 @@
   <body>
     <div class="field">
       <h1>BRIDGE</h1>
-        <div id="working">
-          <h2>{{ . }}</h2>
-        </div>
-        <br>
+      <div id="working">
+         <h2>Server is running</h2>
+      </div>
+      {{ if . }}
+      <div id="received">
+        {{ range . }}
+        <p>{{ . }}</p>
+        {{ end }}
+      </div>
+      {{ end }}
+  
       <div id="builtin">
       <button class="clbut" onclick="window.location.href='http://localhost:8642/text'" target="_blank">TEXT</button>
       <button class="clbut" onclick="window.location.href='http://localhost:8642/files'" target="_blank">FILES</button>
