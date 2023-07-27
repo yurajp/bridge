@@ -3,6 +3,7 @@ package main
 import (
   "fmt"
   "time"
+  "os/exec" 
   "github.com/yurajp/bridge/config"
   "github.com/yurajp/bridge/database"
   "github.com/yurajp/bridge/server"
@@ -19,6 +20,7 @@ func iserr(err error) bool {
 }
 
 func main() {
+  exec.Command("termux-wifi-enable", "true").Run()
   err := config.LoadConf()
   if iserr(err) {
     return
