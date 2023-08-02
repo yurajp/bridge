@@ -26,8 +26,8 @@ var (
   lkTmpl *template.Template
   lvTmpl *template.Template
   Cmode = make(chan string, 1)
-  SrvUp bool
   Q = make(chan struct{}, 1)
+  SrvUp bool
 )
 
 
@@ -52,10 +52,11 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 
 func serverLauncher(w http.ResponseWriter, r *http.Request) {
-  Cmode <-"server"
- // port := config.Conf.Server.Port
-  srTmpl.Execute(w, server.ToWeb)
+  if !SrvUp {
+    Cmode <-"server"
+  }
   SrvUp = true
+  srTmpl.Execute(w, server.ToWeb)
 }
 
 func textLauncher(w http.ResponseWriter, r *http.Request) {
@@ -108,6 +109,9 @@ func linkView(w http.ResponseWriter, r *http.Request) {
         if strings.Contains(strings.ToLower(lv.Title), strings.ToLower(val)) {
           fnd = append(fnd, lv)
         }
+      }
+      if len(fnd) == 0 {
+        fnd = []database.LinkView{database.LinkView{"", "NOTHING FIND", ""}}
       }
       lvTmpl.Execute(w, fnd)
     }

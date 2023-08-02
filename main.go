@@ -11,6 +11,7 @@ import (
   "github.com/yurajp/bridge/web"
 )
 
+
 func iserr(err error) bool {
   if err != nil {
     fmt.Println(err)
@@ -35,12 +36,8 @@ func main() {
     select {
     case mode := <-web.Cmode:
       if mode == "server" {
-        if web.SrvUp {
-          fmt.Println("  Server already running")
-        } else {
-          go server.AsServer()
-          fmt.Println("\n\t BRIDGE server running\n")
-        }
+        go server.AsServer()
+        fmt.Println("\n\t BRIDGE server running\n")
       } 
       if mode == "text" {
         go func() {

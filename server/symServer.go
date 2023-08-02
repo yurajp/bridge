@@ -150,7 +150,6 @@ func GetFiles(conn net.Conn) {
 	  fmt.Printf("%s: %s\n", m, err)
 	}
 	msg := ""
-	
 	for {
 		jsf := make([]byte, 1024)
 		n, err := conn.Read(jsf[:])
@@ -176,7 +175,9 @@ func GetFiles(conn net.Conn) {
 		fmt.Printf("\n\t Downloading %s (%s)\n", u.Fname, anyBytes(u.Fsize))
 		dname := fdir + "/" + u.Fname
 		data := make([]byte, 0)
-		size := 0
+		
+		size, part := 0, 0
+		bar := u.Fsize / 24
 		for size < u.Fsize {
 			tempBuf := make([]byte, 1024 * 4)
 			m, err := conn.Read(tempBuf[:])
@@ -187,11 +188,18 @@ func GetFiles(conn net.Conn) {
 				return
 			}
 			size += m
+			part += m
+			if part >= bar {
+			  fmt.Print(">")
+			  part = 0
+			}
 			data = append(data, tempBuf[:m]...)
+			
 			if errors.Is(err, io.EOF) {
 				break
 			}
 		}
+	  fmt.Print(" ✓")
 		err = os.WriteFile(dname, data, 0664)
 		if err != nil {
 			msg = "Cannot write file"
@@ -207,27 +215,27 @@ func GetFiles(conn net.Conn) {
 			send(msg)
 			return
 		}
-		if int(u.Fsize) != int(din.Size()) {
+		if u.Fsize != int(din.Size()) {
 			msg = "File size error"
 			printer(msg, err)
 			send(msg)
 			return
 		}
 		if u.Isdir {
-			wdr, _ := os.Getwd()
-			os.Chdir(fdir)
+		  	wdr, _ := os.Getwd()
+		  	os.Chdir(fdir)
 		//	ddr, _ := os.Getwd()
-			unz := exec.Command("unzip", u.Fname)
-			err = unz.Run()
-			if err != nil {
-				fmt.Println("\n\t Cannot unzip file")
-			}
-			rmz := exec.Command("rm", u.Fname)
-			err = rmz.Run()
-			if err != nil {
-				fmt.Println("\n\t Cannot delete zipfile")
-			}
-			os.Chdir(wdr)
+		  	unz := exec.Command("unzip", u.Fname)
+		  	err = unz.Run()
+		  	if err != nil {
+		  		fmt.Println("\n\t Cannot unzip file")
+		  	}
+		  	rmz := exec.Command("rm", u.Fname)
+		  	err = rmz.Run()
+		  	if err != nil {
+		  		fmt.Println("\n\t Cannot delete zipfile")
+		  	}
+		  	os.Chdir(wdr)
 		}
 		time.Sleep(time.Millisecond * 150)
 

@@ -1,10 +1,17 @@
+html {
+    -webkit-text-size-adjust : none;
+    text-size-adjust         : none;
+    font-size: 2.0em;
+}
+
 .field {
   display: block;
-  margin: 60px 40px;
-  padding: 80px 60px;
-  background: antiquewhite;
+  margin: 60px 60px;
+  padding: 100px 80px;
+  background: seashell;
   border: 6px solid darkgray;
   border-radius: 128px;
+  box-shadow: 2px 6px 4px silver;
 }
 
 .field h1 {
@@ -15,7 +22,7 @@
 }
 .sfield {
   display: flex;
-  margin: 40px;
+  margin: 20px 40px;
   padding: 60px;
   justify-content: center;
 }
@@ -30,23 +37,25 @@
 #server {
   text-align: center;
   padding: 40px 120px;
-  font-size: 40px;
+  font-size: 1.4rem;
   color: white;
   background-color: darkslategray;
   border: 1px solid gray;
   border-radius: 160px;
+  box-shadow: 2px 6px 4px silver;
 }
 
 .clbut {
   display: inline-block;
-  margin: 60px;
-  padding: 30px 80px;
+  margin: 50px;
+  padding: 30px 60px;
   text-align: center;
-  font-size: 30px;
+  font-size: 1.2rem;
   background-color: darkslategray;
   color: white;
   border: 1px solid gray;
   border-radius: 60px;
+  box-shadow: 2px 6px 4px silver;
 }
 
 #working {
@@ -60,23 +69,24 @@
 }
 #working h2 {
   text-align: center;
-  font-size: 40px;
+  font-size: 1.4rem;
   color: white;
 }
 
 #quit {
   text-align: center;
-  padding: 30px 50px;
-  font-size: 60px;
-  color: red;
+  padding: 10px 30px;
+  font-size: 2.2rem;
+  color: darkred;
   background: white;
-  border: 4px solid orange;
-  border-radius: 160px;
+  border: 4px solid silver;
+  border-radius: 90px;
+  box-shadow: 1px 2px 3px silver;
 }
 
 .field .message {
-  padding: 40px 80px;
-  font-size: 2.8rem;
+  padding: 20px 80px;
+  font-size: 1.8rem;
 }
 
 #received {
@@ -87,6 +97,7 @@
   opacity: 0.9;
   border: 1px solid gray;
   border-radius: 36px;
+  box-shadow: 2px 6px 4px silver;
 }
 
 #received p {
@@ -105,6 +116,7 @@
   color: white;
   border: 1px solid gray;
   border-radius: 60px;
+  box-shadow: 2px 6px 4px silver;
 }
 
 .field h3 {
@@ -129,14 +141,16 @@
 }
 
 .source {
-  font-size: 14px;
-  color: darkgrey;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: steelblue;
   margin-top: 50px;
   padding-left: 60px;
+  font-family: sans;
 }
 .lview a {
-  font-size: 1.6rem;
-  font-family: sans;
+  font-size: 1.4rem;
+  font-family: serif;
   text-decoration: none;
   color: black;
 }

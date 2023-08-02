@@ -19,9 +19,17 @@ func lkShort(tt string) string {
   return strings.Split(tt, " |")[0]
 }
 
+func noMedium(u string) string {
+  spl := strings.Split(u, ".")
+  if len(spl) > 1 && spl[len(spl) - 2] == "medium" {
+    return "NO ACCESS (medium.com)"
+  }
+  return u
+}
+
 func lkSource(lk string) string {
   nm := strings.Split(strings.TrimPrefix(lk, "https://"), "/")[0]
-  return strings.TrimPrefix(nm, "www.")
+  return strings.TrimPrefix(noMedium(nm), "www.")
 }
 
 func MakeView() ([]LinkView, error) {

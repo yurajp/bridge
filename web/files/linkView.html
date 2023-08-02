@@ -2,14 +2,19 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024, user-scalable=yes">
     <title>Links</title>
     <link rel="stylesheet" type="text/css" href="files/style.css">
   </head>
   <body>
+    <div class="sfield">
+      <a href="http://localhost:8642"><img src="files/home-green.png" width="102px"/></a>
+    </div>
+    
     <div class="field">
       {{ range . }}
       <p class="source">{{ .Source }}</p>
-      <p class="lview"><a href={{ .Url }}>{{ .Title }}</a></p>
+      <p class="lview"><a href={{ .Url }} target="_blank">{{ .Title }}</a></p>
       {{ end }}
       
       <div class="sfield">
