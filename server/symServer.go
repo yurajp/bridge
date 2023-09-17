@@ -129,9 +129,11 @@ func GetText(conn net.Conn, pw string) {
 	  if x == 1 {
 	    sfx = " is"
 	  }
-	  tw2 := fmt.Sprintf("@ %d link%s stored", sfx, x)
+	  tw2 := fmt.Sprintf(" @ %d link%s stored", sfx, x)
 	  fmt.Println(tw2)
 	  toWeb(tw2)
+	} else {
+	  fmt.Println(" No links")
 	}
 	send("OK")
 }
