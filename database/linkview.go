@@ -55,3 +55,4 @@ func MakeView() ([]LinkView, error) {
   }
   return lvs, nil
 }
+

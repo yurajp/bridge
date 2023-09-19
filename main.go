@@ -3,6 +3,7 @@ package main
 import (
   "fmt"
   "time"
+  "os"
   "os/exec" 
   "github.com/yurajp/bridge/config"
   "github.com/yurajp/bridge/database"
@@ -24,6 +25,14 @@ func main() {
   exec.Command("termux-wifi-enable", "true").Run()
   err := config.LoadConf()
   if iserr(err) {
+    return
+  }
+  if len(os.Args) > 1 && os.Args[1] == "sync" {
+    fmt.Println("\n\tSYNC DB")
+    err = database.SyncerDb()
+    if iserr(err) {
+      return
+    }
     return
   }
   err = database.PrepareDb()

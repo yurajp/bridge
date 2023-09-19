@@ -41,7 +41,7 @@ var (
   TERMUXDIR = "/data/data/com.termux/files/home/"
 )
 
-var DefaultConf = Config{Appdir: TERMUXDIR + "golangs/bridge/mobile",
+var DefaultConf = Config{Appdir: TERMUXDIR + "golangs/bridge-mobile",
   Server: Srv{Port: ":4646",
     TxtDir: STORAGE + "BridgeTexts",
     FileDir: STORAGE + "BridgeFiles"},
