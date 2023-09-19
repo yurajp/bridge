@@ -135,8 +135,11 @@ func Launcher() {
   mux.HandleFunc("/links", linkView)
   mux.HandleFunc("/quit", quit)
   mux.Handle("/files/", fs)
-  hsrv := &http.Server{Addr: ":8642", Handler: mux}
+  hsrv := &http.Server{Addr: ":" + config.Conf.WebPort, Handler: mux}
   
   go hsrv.ListenAndServe()
-  exec.Command("xdg-open", "http://localhost:8642").Run()
+  err := exec.Command("xdg-open", "http://localhost:" + config.Conf.WebPort).Run()
+  if err != nil {
+    fmt.Println("xdg-open: ", err)
+  }
 }

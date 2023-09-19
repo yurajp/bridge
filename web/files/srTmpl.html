@@ -21,11 +21,11 @@
       {{ end }}
   
       <div id="builtin">
-      <button class="clbut" onclick="window.location.href='http://localhost:8642/text'" target="_blank">TEXT</button>
-      <button class="clbut" onclick="window.location.href='http://localhost:8642/files'" target="_blank">FILES</button>
+      <button class="clbut" onclick="window.location.href='http://localhost:'+window.location.port+'/text'" target="_blank">TEXT</button>
+      <button class="clbut" onclick="window.location.href='http://localhost:'+window.location.port+'/files'" target="_blank">FILES</button>
       </div>
       <div class="sfield">
-        <button id="quit" onclick="window.location.href='http://localhost:8642/quit'" target="_self">✘</button>
+        <button id="quit" onclick="window.location.href='http://localhost:'+window.location.port+'/quit'" target="_self">✘</button>
       </div>
     </div>
   </body>

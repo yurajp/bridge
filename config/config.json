@@ -26,4 +26,5 @@
       "keypath": ".ssh/id_rsa",
       "dbpath": "/home/yura/golangs/bridge/database/bridge.db"
     },
+    "webport": "8642"
  }

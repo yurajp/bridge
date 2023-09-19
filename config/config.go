@@ -12,6 +12,7 @@ type Config struct {
   Client Clt `json:"client"`
   Db Dbs `json:"db"`
   Remote Ssh `json:"remote"`
+  WebPort string `json:"webport"`
 }
 
 type Srv struct {
@@ -32,6 +33,7 @@ type Ssh struct {
   KeyPath string `json:"keypath"`
   DbPath string `json:"dbpath"`
 }
+
 type Dbs struct {
     SqltPath string `json:"sqltpath"`
     SqltTable string `json:"sqlttable"`
@@ -67,6 +69,7 @@ var DefaultConf = Config{Appdir: TERMUXDIR + "golangs/bridge-mobile",
     Addr: "192.168.1.38",
     KeyPath: TERMUXDIR + ".ssh/id_rsa",
     DbPath: "/home/yura/golangs/bridge/database/bridge.db"},
+    WebPort: "8642",
 }
   
 var Conf Config
@@ -141,6 +144,9 @@ func TerminalConfig() error {
   cf.Remote.Addr = set("address of remote machine", DefaultConf.Remote.Addr)
   cf.Remote.KeyPath = set("path to ssh keys", DefaultConf.Remote.KeyPath)
   cf.Remote.DbPath = set("path to bridge.db on remote machine", DefaultConf.Remote.DbPath)
+  fmt.Println("\t Web Port")
+  cf.WebPort = set("port for local http-server", DefaultConf.WebPort)
+  
   return WriteConf(cf)
 }
 

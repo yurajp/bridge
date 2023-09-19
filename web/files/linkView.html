@@ -8,7 +8,7 @@
   </head>
   <body>
     <div class="sfield">
-      <a href="http://localhost:8642"><img src="files/home-green.png" width="102px"/></a>
+      <a onclick="href='http://localhost:'+window.location.port"><img src="files/home-green.png" width="102px"/></a>
     </div>
     
     <div class="field">
@@ -18,7 +18,7 @@
       {{ end }}
       
       <div class="sfield">
-        <button id="quit" onclick="window.location.href='http://localhost:8642/quit'" target="_self">✘</button>
+        <button id="quit" onclick="window.location.href='http://localhost:'+window.location.port+'/quit'" target="_self">✘</button>
       </div>
     </div>
   </body>
