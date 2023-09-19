@@ -11,9 +11,10 @@ type Config struct {
   Server Srv `json:"server"`
   Client Clt `json:"client"`
   Db Dbs `json:"db"`
+  Remote Ssh `json:"remote"`
 }
 
-type  Srv struct {
+type Srv struct {
     Port string `json:"port"`
     TxtDir string `json:"txtdir"`
     FileDir string `json:"filedir"`
@@ -25,6 +26,12 @@ type  Clt struct {
     FileDir string `json:"filedir"`
 }
 
+type Ssh struct {
+  User string `json:"user"`
+  Addr string `json:"addr"`
+  KeyPath string `json:"keypath"`
+  DbPath string `json:"dbpath"`
+}
 type Dbs struct {
     SqltPath string `json:"sqltpath"`
     SqltTable string `json:"sqlttable"`
@@ -55,7 +62,12 @@ var DefaultConf = Config{Appdir: TERMUXDIR + "golangs/bridge-mobile",
     PgUser: "yura",
     PgPswd: "26335",
     PgName: "notedb",
-    PgTable: "messer"}}
+    PgTable: "messer"},
+  Remote: Ssh{User: "yura",
+    Addr: "192.168.1.38",
+    KeyPath: TERMUXDIR + ".ssh/id_rsa",
+    DbPath: "/home/yura/golangs/bridge/database/bridge.db"},
+}
   
 var Conf Config
 
@@ -124,6 +136,11 @@ func TerminalConfig() error {
     cf.Db.PgName = set("pg db's name", DefaultConf.Db.PgName)
     cf.Db.PgTable = set("table name", DefaultConf.Db.PgTable)
   }
+  fmt.Println("\t  REMOTE:")
+  cf.Remote.User = set("user of remote server", DefaultConf.Remote.User)
+  cf.Remote.Addr = set("address of remote machine", DefaultConf.Remote.Addr)
+  cf.Remote.KeyPath = set("path to ssh keys", DefaultConf.Remote.KeyPath)
+  cf.Remote.DbPath = set("path to bridge.db on remote machine", DefaultConf.Remote.DbPath)
   return WriteConf(cf)
 }
 

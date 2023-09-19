@@ -10,12 +10,11 @@ import (
 )
 
 var (
-  remotePath = "/home/yura/golangs/bridge/database/bridge.db"
   locpath = "database/remote.db"
+  lockdb = config.Conf.Db.SqltPath
 )
 
 func getRemoteDb() error {
-  locpath := "database/remote.db"
   if _, err := os.Stat(locpath); err != nil {
     if os.IsNotExist(err) {
       f, er := os.Create(locpath)
@@ -25,19 +24,22 @@ func getRemoteDb() error {
       defer f.Close()
     }
   }
-	client, err := goph.New("yura", "192.168.1.38", goph.Password("qq1357531"))
+  auth, err := goph.Key(config.Conf.Remote.KeyPath, "")
+  if err != nil {
+    return fmt.Errorf("key: %s", err)
+  }
+	client, err := goph.New(config.Conf.Remote.User, config.Conf.Remote.Addr, auth)
 	if err != nil {
 		return fmt.Errorf("ssh: %s", err)
 	}
 	defer client.Close()
   
-  err = client.Download(remotePath , locpath)
+  err = client.Download(config.Conf.Remote.DbPath , locpath)
   if err != nil {
     return fmt.Errorf("download db: %s", err)
   }
   return nil
 }
-
 
 func loadLinks(name string) ([]Link, error) {
   lL := []Link{}
@@ -94,7 +96,7 @@ func completeDb(ls []Link) error {
     fmt.Println("No missing links")
     return nil
   }
-  db, err := sql.Open("sqlite3", "database/bridge.db")
+  db, err := sql.Open("sqlite3", config.Conf.Db.SqltPath)
   if err != nil {
     return fmt.Errorf("open bridge.db: %s", err)
   }
@@ -159,11 +161,15 @@ func SyncerDb() error {
 }
 
 func UploadDb() error {
-  client, err := goph.New("yura", "192.168.1.38", goph.Password("qq1357531"))
+  auth, err := goph.Key(config.Conf.Remote.KeyPath, "")
+  if err != nil {
+    return fmt.Errorf("key: %s", err)
+  }
+  client, err := goph.New(config.Conf.Remote.User, config.Conf.Remote.Addr, auth)
   if err != nil {
     return fmt.Errorf("goph client: %s", err)
   }
-  err = client.Upload("database/bridge.db", remotePath)
+  err = client.Upload(config.Conf.Db.SqltPath, config.Conf.Remote.DbPath)
   if err != nil {
     return fmt.Errorf("client upload: %s", err)
   }

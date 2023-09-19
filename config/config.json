@@ -19,5 +19,11 @@
        "pgpswd": "26335",
        "pgname": "notedb",
        "pgtable": "messer"
-    }
+    },
+    "remote": {
+      "user": "yura",
+      "addr": "192.168.1.38",
+      "keypath": ".ssh/id_rsa",
+      "dbpath": "/home/yura/golangs/bridge/database/bridge.db"
+    },
  }
