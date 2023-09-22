@@ -69,14 +69,20 @@ func LinkScanner(text string) (int, error) {
   url := regexp.MustCompile(`http(s)?://*`)
   sc := bufio.NewScanner(strings.NewReader(text))
   linksDb := []Link{}
+  nosuccess := 0
   for sc.Scan() {
     line := sc.Text()
     if url.MatchString(line) {
       if title := ScrapeTitle(line); title != "" {
         link := Link{title, line, time.Now().Format("2006-01-02")}
         linksDb = append(linksDb, link)
+      } else {
+        nosuccess++
       }
     }
+  }
+  if nosuccess > 0 {
+    fmt.Printf("  %d link(s) will NOT be stored\n", nosuccess)
   }
   if len(linksDb) == 0 {
     return 0, nil
